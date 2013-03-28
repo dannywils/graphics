@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Graphics Package</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="A program to demonstate the graphics package.">
+		<meta name="author" content="Danny Wilson">
+
+		<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<!-- Styles -->
+		<link href="assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+		<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+		<link href="assets/css/custom.css" rel="stylesheet">
+		<link href="assets/css/colorpicker.css" rel="stylesheet"/>
+		<link href="assets/css/jquery-ui-1.8.16.custom.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="navbar">
+			<div class="navbar-inner">
+				<div class="container" style="width: auto;">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+					<a class="brand" href="#">CSCI4160 Graphics Package</a>
+					<div class="nav-collapse">
+						<ul class="nav">
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-file icon-white"></i> File <b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li>
+										<a id="new" href="#">New</a>
+									</li>
+									<li>
+										<a id="save" href="#">Save</a>
+									</li>
+									<li>
+										<a id="load" href="#">Load</a>
+									</li>
+
+								</ul>
+							</li>
+							<li>
+								<a class="lights" href="#"><i class=" icon-eye-open icon-white"></i> <span>Lights Off</span></a>
+							</li>
+
+						</ul>
+						<button id="reset" class="btn btn-primary">
+							Reset Canvas
+						</button>
+						<button id="centercp" class="btn btn-primary">
+							Center on Current Position
+						</button>
+						<button id="center00" class="btn btn-primary">
+							Center on (0,0)
+						</button>
+						<ul class="nav pull-right">
+							<li>
+								<a href="#">Danny Wilson</a>
+							</li>
+						</ul>
+					</div><!-- /.nav-collapse -->
+				</div>
+			</div><!-- /navbar-inner -->
+		</div>
+
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span2">
+
+					<div class="well">
+						<ul class="nav nav-list">
+							<li class="nav-header">
+								Input
+							</li>
+							<li>
+								<a href="#line" role="button" data-toggle="modal">Line Absolute</a>
+							</li>
+							<li>
+								<a href="#linerel" role="button" data-toggle="modal">Line Relative</a>
+							</li>
+
+							<li>
+								<a href="#polygon" role="button" data-toggle="modal">Polygon Absolute</a>
+							</li>
+
+							<li>
+								<a href="#polygonrel" role="button" data-toggle="modal">Polygon Relative</a>
+							</li>
+							<li>
+								<a href="#text" role="button" data-toggle="modal">Text Absolute</a>
+							</li>
+							<li>
+								<a href="#textrel" role="button" data-toggle="modal">Text Relative</a>
+							</li>
+							<li class="nav-header">
+								Functions
+							</li>
+							<li>
+								<a href="#move" role="button" data-toggle="modal">Move Absolute</a>
+							</li>
+							<li>
+								<a href="#moverel" role="button" data-toggle="modal">Move Relative</a>
+							</li>
+						</ul>
+					</div>
+
+					<div class="well drawn-box" style="padding: 8px 0;">
+						<ul id="drawn" class="nav nav-list">
+							<li class="nav-header">
+								Drawn Elements
+							</li>
+						</ul>
+					</div>
+
+				</div>
+				<div class="span10" id="canvas_controls">
+					<div class="input-prepend" id="vpx">
+						<span class="add-on"><abbr title="X value of top left point">VPX</abbr></span>
+						<input class="span1" id="prependedInput" size="2" type="text">
+					</div>
+					<div class="input-prepend"  style="display:inline;" id="vpy">
+						<span class="add-on"><abbr title="Y value of top left point">VPY</abbr></span>
+						<input class="span1" id="prependedInput" size="2" type="text">
+					</div>
+					<div class="input-prepend"  style="display:inline;" id="ww">
+						<span class="add-on"><abbr title="World window width">WW</abbr></span>
+						<input class="span1" id="prependedInput" size="2" type="text">
+					</div>
+
+					<div class="input-prepend"  style="display:inline;" id="wh">
+						<span class="add-on"><abbr title="World window height">WH</abbr></span>
+						<input class="span1" id="prependedInput" size="2" type="text">
+					</div>
+					<div class="input-prepend"  style="display:inline;" id="mouse">
+						<span class="add-on"><abbr title="Mouse Coordinates (World)">Mouse</abbr></span>
+						<input class="span1" id="prependedInput" size="2" type="text" readonly>
+					</div>
+
+				</div>
+				<div id="canvas_container" class="span10">
+					<canvas id="myCanvas" style="border:1px solid #eee;padding:0;margin:0;">
+						Your browser does not support the HTML5 canvas tag.
+					</canvas>
+					<div id="buttonWrapper">
+						<button id="plus" >
+							<i class=" icon-zoom-in"></i>
+						</button>
+						<button id="minus" >
+							<i class=" icon-zoom-out"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Polygon Modal -->
+		<div class="modal hide fade in" id="polygon">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					×
+				</button>
+				<h3>Polygon</h3>
+			</div>
+			<div class="modal-body">
+				<ul id="polygon_points" class="sortable nopadding" style="list-style: none;">
+					<li class="first">
+						<input type="text" size="4" name="x" class="pointx" value="" placeholder="X" />
+						<input type="text" size="4" name="y" class="pointy" value="" placeholder="Y" />
+						<i class="icon-remove"></i>
+					</li>
+				</ul>
+				<ul>
+					<div class="input-append color" data-color="rgb(255, 146, 180)" data-color-format="rgb" id="cp3">
+						<input type="text" class="span2 colorpick" value="" readonly placeholder="Color">
+						<span class="add-on"><i style="background-color: rgb(255, 146, 180)"></i></span>
+					</div>
+				</ul>
+			</div>
+
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal">
+					Close
+				</button>
+				<button class="btn btn-danger remove">
+					Remove
+				</button>
+				<button class="btn btn-primary save">
+					Save changes
+				</button>
+			</div>
+		</div>
+		<!-- Relative Polygon Modal -->
+		<div class="modal hide fade in" id="polygonrel">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					×
+				</button>
+				<h3>Relative Polygon</h3>
+			</div>
+			<div class="modal-body">
+				<ul id="polygon_rel_points" class="sortable nopadding" style="list-style: none;">
+					<li class="first">
+						<input type="text" size="4" name="x" class="pointx" value="" placeholder="X" readonly/>
+						<input type="text" size="4" name="y" class="pointy" value="" placeholder="Y" readonly/>
+
+					</li>
+					<li>
+						<input type="text" size="4" name="x" class="pointx" value="" placeholder="Delta X" />
+						<input type="text" size="4" name="y" class="pointy" value="" placeholder="Delta Y"/>
+						<i class="icon-remove"></i>
+					</li>
+				</ul>
+				<ul>
+					<div class="input-append color" data-color="rgb(255, 146, 180)" data-color-format="rgb" id="cp3">
+						<input type="text" class="span2 colorpick" value="" readonly placeholder="Color">
+						<span class="add-on"><i style="background-color: rgb(255, 146, 180)"></i></span>
+					</div>
+				</ul>
+			</div>
+
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal">
+					Close
+				</button>
+				<button class="btn btn-primary save">
+					Add Polygon
+				</button>
+			</div>
+		</div>
+		<!-- Line Absolute -->
+		<div class="modal hide fade in" id="line">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					×
+				</button>
+				<h3>Absolute Line</h3>
+			</div>
+			<div class="modal-body">
+				<ul class="sortable nopadding" style="list-style: none;">
+					<li>
+						<input type="text" size="4" name="x" class="pointx" value="" placeholder="X" />
+						<input type="text" size="4" name="y" class="pointy" value="" placeholder="Y"/>
+					</li>
+					<li>
+						<input type="text" size="4" name="x" class="pointx" value="" placeholder="X" />
+						<input type="text" size="4" name="y" class="pointy" value="" placeholder="Y"/>
+					</li>
+				</ul>
+				<ul>
+					<div class="input-append color" data-color="#000000" data-color-format="hex" id="cp3">
+						<input type="text" class="span2 colorpick" value="" readonly placeholder="Color">
+						<span class="add-on"><i style="background-color: rgb(0, 0, 0)"></i></span>
+					</div>
+				</ul>
+			</div>
+
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal">
+					Close
+				</button>
+				<button class="btn btn-primary save">
+					Add Line
+				</button>
+			</div>
+		</div>
+		<!-- Line Relative -->
+		<div class="modal hide fade in" id="linerel">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					×
+				</button>
+				<h3>Relative Line</h3>
+			</div>
+			<div class="modal-body">
+				<ul id="polygon_rel_points" class="sortable nopadding" style="list-style: none;">
+					<li class="first">
+						<input type="text" size="4" name="x" class="pointx" value="" placeholder="X" readonly/>
+						<input type="text" size="4" name="y" class="pointy" value="" placeholder="Y" readonly/>
+
+					</li>
+					<li>
+						<input type="text" size="4" name="x" class="pointx" value="" placeholder="Delta X" />
+						<input type="text" size="4" name="y" class="pointy" value="" placeholder="Delta Y"/>
+					</li>
+				</ul>
+				<ul>
+					<div class="input-append color" data-color="rgb(255, 146, 180)" data-color-format="rgb" id="cp3">
+						<input type="text" class="span2 colorpick" value="" readonly placeholder="Color">
+						<span class="add-on"><i style="background-color: rgb(255, 146, 180)"></i></span>
+					</div>
+				</ul>
+			</div>
+
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal">
+					Close
+				</button>
+				<button class="btn btn-primary save">
+					Add Line
+				</button>
+			</div>
+		</div>
+		<!-- Move Relative -->
+		<div class="modal hide fade in" id="move">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					×
+				</button>
+				<h3>Absolute Move</h3>
+			</div>
+			<div class="modal-body">
+				<ul class="sortable nopadding" style="list-style: none;">
+					<li>
+						<input type="text" size="4" name="x" class="pointx" value="" placeholder="X" />
+						<input type="text" size="4" name="y" class="pointy" value="" placeholder="Y"/>
+					</li>
+				</ul>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal">
+					Close
+				</button>
+				<button class="btn btn-primary save">
+					Move
+				</button>
+			</div>
+		</div>
+		<!-- Move Relative -->
+		<div class="modal hide fade in" id="moverel">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					×
+				</button>
+				<h3>Relative Move</h3>
+			</div>
+			<div class="modal-body">
+				<ul class="sortable nopadding" style="list-style: none;">
+					<li>
+						<input type="text" size="4" name="x" class="pointx" value="" placeholder="Delta X" />
+						<input type="text" size="4" name="y" class="pointy" value="" placeholder="Delta Y"/>
+					</li>
+				</ul>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal">
+					Close
+				</button>
+				<button class="btn btn-primary save">
+					Move
+				</button>
+			</div>
+		</div>
+		<!-- Text Modal -->
+		<div class="modal hide fade in" id="text">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					×
+				</button>
+				<h3>Text</h3>
+			</div>
+			<div class="modal-body">
+				<div id="text_data">
+					<form class="form-horizontal">
+						<div class="control-group">
+							<label class="control-label" for="text">Text</label>
+							<div class="controls">
+								<input type="text" name="text" class="text-data" value="" placeholder="Text" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="x">Anchor Point:</label>
+							<div class="controls">
+								<input type="text" name="x" class="pointx" value="" placeholder="X" />
+								<input type="text" name="y" class="pointy" value="" placeholder="Y" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="color">Color:</label>
+							<div class="controls">
+								<div class="input-append color" data-color="rgb(255, 146, 180)" data-color-format="rgb" id="cp3">
+									<input type="text" class="span2 colorpick" value="" readonly>
+									<span class="add-on"><i style="background-color: rgb(255, 146, 180)"></i></span>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal">
+					Close
+				</button>
+				<button class="btn btn-danger remove">
+					Remove
+				</button>
+				<button class="btn btn-primary save">
+					Save changes
+				</button>
+			</div>
+		</div>
+		<!-- Text Relative -->
+		<div class="modal hide fade in" id="textrel">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					×
+				</button>
+				<h3>Relative Text</h3>
+			</div>
+			<div class="modal-body">
+				<div id="text_data">
+					<form class="form-horizontal">
+						<div class="control-group">
+							<label class="control-label" for="text">Text</label>
+							<div class="controls">
+								<input type="text" name="text" class="text-data" value="" placeholder="Text" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="x">Anchor Point:</label>
+							<div class="controls">
+								<input type="text" name="x" class="pointx" value="" placeholder="Delta X" />
+								<input type="text" name="y" class="pointy" value="" placeholder="Delta Y" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="color">Color:</label>
+							<div class="controls">
+								<div class="input-append color" data-color="rgb(255, 146, 180)" data-color-format="rgb" id="cp3">
+									<input type="text" class="span2 colorpick" value="" readonly>
+									<span class="add-on"><i style="background-color: rgb(255, 146, 180)"></i></span>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal">
+					Close
+				</button>
+				<button class="btn btn-danger remove">
+					Remove
+				</button>
+				<button class="btn btn-primary save">
+					Save changes
+				</button>
+			</div>
+		</div>
+		<script src="assets/js/jquery-1.7.2.min.js"></script>
+		<script src="assets/js/bootstrap.js"></script>
+		<script src="assets/js/jquery-ui-1.8.16.custom.min.js"></script>
+		<script src="assets/js/bootstrap-colorpicker.js"></script>
+		<script src="assets/js/extend.js"></script>
+		<!-- Graphics Package -->
+		<script src="assets/js/graphics/canvas.js"></script>
+		<script src="assets/js/graphics/circle.js"></script>
+		<script src="assets/js/graphics/point.js"></script>
+		<script src="assets/js/graphics/line.js"></script>
+		<script src="assets/js/graphics/polygon.js"></script>
+		<script src="assets/js/graphics/text.js"></script>
+		<script src="assets/js/graphics/events.js"></script>
+		<script src="assets/js/graphics/main.js"></script>
+		<script>
+			$(function() {
+				$('.colorpick').parent().colorpicker({
+					format : 'hex'
+				});
+			});
+		</script>
+	</body>
+</html>

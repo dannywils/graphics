@@ -1,0 +1,54 @@
+/**
+ * custom.css
+ * Danny Wilson
+ * 05/10/2012
+ * **/
+body {
+
+	font-family: 'Ubuntu', Tahoma, sans-serif;
+	background-color: #efefef;	text-shadow: none;}
+input[type =
+"button"] {
+	padding: 5px;
+	width: 30px;
+	margin: 0px 0px 2px 0px;
+}
+.well a {
+
+}
+#canvas_container {
+	position: relative;
+}
+
+#buttonWrapper {
+	position: absolute;
+	width: 30px;
+	top: 2px;
+	left: 2px;
+}
+canvas {
+	background-color: #fff;
+}
+canvas:hover {
+	cursor: move;
+}
+#vpx, #vpy, #ww, #wh {
+	display: inline;
+	padding-right: 5px;
+}
+#canvas_controls {
+	margin-bottom: 5px;
+}
+.well {
+	padding: 8px 0;
+}
+
+.well li {
+	line-height: 12px;
+}
+.icon-remove {
+	cursor: pointer;
+}
+.colorpicker {
+	z-index: 9999;
+}
